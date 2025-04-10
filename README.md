@@ -148,9 +148,9 @@ $x^3$以上・・・データ量が多い場合のみ検討
 
 ### ２大案の比較
 
-![alt text](image-0.png)
-![alt text](image-1.png)
-![alt text](image-2.png)
+![alt text](documents/image0.png)
+![alt text](documents/image1.png)
+![alt text](documents/image2.png)
 
 ### その他の手法
 
