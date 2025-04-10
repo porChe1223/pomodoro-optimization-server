@@ -1,6 +1,6 @@
 from scipy.optimize import minimize
 
-def optimization(x):
+def optimize(x):
     """最適化関数
     Args:
         x (list): W, B, N のリスト
