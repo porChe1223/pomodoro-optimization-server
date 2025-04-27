@@ -13,8 +13,8 @@ import os
 
 # 🔧 探索空間の定義
 space = [
-    Real(15, 60, name="work_duration"),    # 作業時間（分）
-    Real(3, 20, name="break_duration"),    # 休憩時間（分）
+    Real(15, 90, name="work_duration"),    # 作業時間（分）
+    Real(3, 30, name="break_duration"),    # 休憩時間（分）
 ]
 
 # 📦 ログファイルの初期化
@@ -78,15 +78,8 @@ initial_score = simulate_focus_score(25, 5)
 
 # 🔁 最適化の実行
 result = gp_minimize(
-    func=objective,
-    dimensions=space,
-    n_calls=1000,
-    n_initial_points=1,
-    x0=[initial_point],
-    y0=[initial_score],
-    random_state=42,
-    verbose=True,
-    callback=[call_back]
+  func,
+  dimensions=space
 )
 
 # 📊 結果の可視化
