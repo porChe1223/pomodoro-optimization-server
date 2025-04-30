@@ -1,0 +1,6 @@
+scikit-learn
+scikit-optimize
+pandas
+numpy
+fastapi
+uvicorn[standard]
