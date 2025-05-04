@@ -5,17 +5,23 @@ class CSVHandler:
     """CSVファイルを操作するクラス
 
     Attributes:
-        file_path: str // CSVファイルの位置
-        df: DataFrame // CSVファイルのデータ
+        file_path (str): CSVファイルの位置
+        df(DataFrame): CSVファイルのデータ
     Methods:
-        __init__(file_path: str) // CSVファイルの読み込み
-        get_specific_columns_and_rows_data(columns: list[str], rows: list[int] | slice) // 特定のカラムと行を取得
+        __init__(file_path: str)
+         -> CSVファイルの読み込み
+        update_data(new_data: list, columns: list[str] = None)
+         -> CSVファイルの更新
+        choose_data(columns: list[str] = None, rows: list[int] | slice = None)
+         -> CSVファイルの特定のカラムと行を取得
+        make_chosen_data_list(columns: list[str] = None, rows: list[int] | slice = None)
+         -> CSVファイルの特定のカラムと行を取得し、リストに変換
     """
     def __init__(self, file_path):
         """ファイルの読み込み
 
         Args:
-            file_path: str // CSVファイルの位置
+            file_path (str): CSVファイルの位置
         """
         try:
             # CSVファイルのパスを定義
@@ -35,8 +41,8 @@ class CSVHandler:
         """CSVファイルの更新
 
         Args:
-            new_data: list // 更新するデータ
-            columns: list[str] // 更新するカラム
+            new_data (list): 新しいデータ
+            columns (list[str]): 更新するカラム名
         """
         try:
             # columnsが文字列（単一カラム）の場合、リストに変換
@@ -68,8 +74,8 @@ class CSVHandler:
         """CSVファイルの特定のカラムと行を取得
 
         Args:
-            columns: list[str] // 取得したいカラム
-            rows: list[int] | slice // 取得したい行
+            columns (list[str]): 取得したいカラム
+            rows (list[int] | slice): 取得したい行
         Useage:
             columns=["work_time", "break_time"], rows=[0,1,4]
             columns=["work_time", "break_time"], rows=slice(0,2)
@@ -77,7 +83,7 @@ class CSVHandler:
             columns=["work_time"], rows=None
             columns=None, rows=slice(0,2)
         Returns:
-            chosen_data: DataFrame // 特定のカラムと行のデータ
+            chosen_data (DataFrame): 特定のカラムと行のデータ
         """
         try:
             # カラムと行の取得
@@ -104,8 +110,8 @@ class CSVHandler:
         """CSVファイルの特定のカラムと行を取得し、リストに変換
 
         Args:
-            columns: list[str] // 取得したいカラム
-            rows: list[int] | slice // 取得したい行
+            columns (list[str]): 取得したいカラム
+            rows (list[int] | slice): 取得したい行
         Useage:
             columns=["work_time", "break_time"], rows=[0,1,4]  // [[25, 5], [30, 5], [20, 5]]
             columns=["work_time"], rows=None                   // [25, 30, 20]
@@ -113,7 +119,7 @@ class CSVHandler:
             columns=["work_time", "break_time"], rows=slice(44,None)
             columns=None, rows=slice(0,2)
         Returns:
-            chosen_data_list: list // 特定のカラムと行のデータ。一つの列の場合は1次元リスト、複数列の場合は2次元リスト
+            chosen_data_list (list): 特定のカラムと行のデータ。一つの列の場合は1次元リスト、複数列の場合は2次元リスト
         """
         try:
             # カラムと行の取得
