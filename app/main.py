@@ -1,50 +1,44 @@
+from csv_handler.csv_handler import CSVHandler
+from optimize.optimize_round import optimize_round
 from fastapi import FastAPI
 
-from skopt import gp_minimize
-from skopt.space import Real
-from skopt.utils import use_named_args
-from skopt.learning import GaussianProcessRegressor
-from skopt.callbacks import EarlyStopper
-import datetime
-from sklearn.gaussian_process.kernels import RBF, Matern, WhiteKernel, ConstantKernel as C
-import numpy as np
-import pandas as pd
-from datetime import datetime
-import os
 
 app = FastAPI()
 
-
 @app.get("/")
-def read_root():
-    return "SelfPomodoroAPI: 自動ポモドーロ最適化サーバー"
+def hello():
+    return "PomodoroOptimizationServer: ポモドーロ最適化サーバー"
 
+@app.get("/round_optimizer/")
+def round_optimizer(focus_score: float):
+    """ラウンド最適化API
 
-@app.get("/optimize_once/")
-def optimize(focus_level: int):
-    """
-    最適化。
-    
     Args:
-    - focus_level: 集中度スコア
-
+        focus_score (float): 集中度スコア
     Returns:
-    -   -最適化された作業時間と休憩時間
+        work_time (float): 最適な作業時間
+        break_time (float): 最適な休憩時間
     """
-    # 最適化の範囲
-    space = [
-        Real(15, 60, name="work_duration"), # 作業時間（分）
-        Real(3, 20, name="break_duration"), # 休憩時間（分）
-    ]
+    csv_handler = CSVHandler("../data/round_data.csv")
+    # CSVファイル更新
+    new_data = [focus_score]
+    columns = ["focus_score"]
+    csv_handler.update_data(new_data=new_data, columns=columns)
+    # 説明変数と目的変数を取得
+    explanatory_variable = csv_handler.make_chosen_data_list(columns=["work_time", "break_time"])
+    objective_variable = csv_handler.make_chosen_data_list(columns=["focus_score"])
+    print("説明変数リスト", explanatory_variable)
+    print("目的変数リスト", objective_variable)
+    # ラウンド最適化
+    work_time, break_time = optimize_round(explanatory_variable, objective_variable)
+    print("提案された作業時間: ", work_time)
+    print("提案された休憩時間: ", break_time)
+    # CSVファイルの更新
+    new_data = [work_time, break_time]
+    columns = ["work_time", "break_time"]
+    csv_handler.update_data(new_data=new_data, columns=columns)
 
-    # CSVログファイルの初期化
-    log_file = "pomodoro_optimization_log.csv"
-    if os.path.exists(log_file):
-        os.remove(log_file)
-    pd.DataFrame(columns=[
-        "work_time",
-        "break_time",
-        "focus_score"]).to_csv(log_file, index=False)
-    print("ログファイルを初期化しました。")
-    
-    # 最適化
+    return {
+        "work_time": work_time,
+        "break_time": break_time
+    }
