@@ -10,8 +10,8 @@ def optimize_round(explanatory_variable, objective_variable):
     """ラウンド最適化を行う関数
     
     Args:
-        explanatory_variable: list // 説明変数のリスト [[25, 5], [30, 5], [20, 5]]
-        objective_variable: list // 目的変数のリスト [25, 30, 20]
+        explanatory_variable (list): 説明変数のリスト [[25, 5], [30, 5], [20, 5]]
+        objective_variable (list): 目的変数のリスト [25, 30, 20]
     Returns:
         work_time (float): 最適な作業時間
         break_time (float): 最適な休憩時間
