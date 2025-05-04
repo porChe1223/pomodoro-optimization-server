@@ -9,8 +9,8 @@ app = FastAPI()
 def hello():
     return "PomodoroOptimizationServer: ポモドーロ最適化サーバー"
 
-@app.get("/round_optimizer/")
-def round_optimizer(focus_score: float):
+@app.get("/round_optimizer/{user_id}")
+def round_optimizer(user_id: str, focus_score: float):
     """ラウンド最適化API
 
     Args:
@@ -19,7 +19,7 @@ def round_optimizer(focus_score: float):
         work_time (float): 最適な作業時間
         break_time (float): 最適な休憩時間
     """
-    csv_handler = CSVHandler("../data/round_data.csv")
+    csv_handler = CSVHandler(f"../data/round_csv/{user_id}.csv")
     # CSVファイル更新
     new_data = [focus_score]
     columns = ["focus_score"]
