@@ -31,41 +31,79 @@ class CSVHandler:
             raise {f"CSVファイルの読み込みに失敗しました->\n {e}"}
 
 
-    def get_specific_data(self, columns: list[str] = None, rows: list[int] | slice = None):
+    def choose_data(self, columns: list[str] = None, rows: list[int] | slice = None):
         """CSVファイルの特定のカラムと行を取得
+
         Args:
             columns: list[str] // 取得したいカラム
             rows: list[int] | slice // 取得したい行
         Useage:
+            columns=["work_time", "break_time"], rows=[0,1,4]
             columns=["work_time", "break_time"], rows=slice(0,2)
-            columns=["work_time", "break_time"], rows=slice(0,None)
+            columns=["work_time", "break_time"], rows=slice(44,None)
             columns=["work_time"], rows=None
             columns=None, rows=slice(0,2)
         Returns:
-            specific_columns_and_rows_data: DataFrame // 特定のカラムと行のデータ
+            chosen_data: DataFrame // 特定のカラムと行のデータ
         """
         try:
             # カラムと行の取得
             if columns and rows is not None:
-                specific_columns_and_rows_data = self.df.iloc[rows][columns]
+                chosen_data = self.df.iloc[rows][columns]
             # カラムのみの取得            
             elif columns is not None and rows is None:
-                specific_columns_and_rows_data = self.df[columns]
+                chosen_data = self.df[columns]
             # 行のみの取得
             elif rows is not None and columns is None:
-                specific_columns_and_rows_data = self.df.iloc[rows]
+                chosen_data = self.df.iloc[rows]
             
             else:
                 raise ValueError("カラムか列のいずれかを指定してください")
             
-            return specific_columns_and_rows_data
+            return chosen_data
         
         except Exception as e:
             print(f"CSVファイルの特定のカラムと行の取得に失敗しました->\n{e}")
             raise {f"CSVファイルの特定のカラムと行の取得に失敗しました->\n {e}"}
+    
 
+    def make_chosen_data_list(self, columns: list[str] = None, rows: list[int] | slice = None):
+        """CSVファイルの特定のカラムと行を取得し、リストに変換
 
-
+        Args:
+            columns: list[str] // 取得したいカラム
+            rows: list[int] | slice // 取得したい行
+        Useage:
+            columns=["work_time", "break_time"], rows=[0,1,4]  // [[25, 5], [30, 5], [20, 5]]
+            columns=["work_time"], rows=None                   // [25, 30, 20]
+            columns=["work_time", "break_time"], rows=slice(0,2)
+            columns=["work_time", "break_time"], rows=slice(44,None)
+            columns=None, rows=slice(0,2)
+        Returns:
+            chosen_data_list: list // 特定のカラムと行のデータ。一つの列の場合は1次元リスト、複数列の場合は2次元リスト
+        """
+        try:
+            # カラムと行の取得
+            chosen_data = self.choose_data(columns=columns, rows=rows)
+            # リストに変換
+            chosen_data_list = chosen_data.values.tolist()
+            
+            # 一つの列だけの場合は1次元リストにフラット化
+            if columns is not None and len(columns) == 1:
+                chosen_data_list = [item[0] for item in chosen_data_list]
+            
+            return chosen_data_list
+        
+        except Exception as e:
+            print(f"CSVファイルの特定のカラムと行の取得に失敗しました->\n{e}")
+            raise {f"CSVファイルの特定のカラムと行の取得に失敗しました->\n {e}"}
+    
+    
 if __name__ == "__main__":
+    # CSVファイル操作
     csv_handler = CSVHandler("../../data/round_data.csv")
-    print(csv_handler.get_specific_data( columns=["work_time", "break_time"], rows=slice(None,None)))
+    # 説明変数と目的変数を取得
+    explanatory_variable = csv_handler.make_chosen_data_list(columns=["work_time", "break_time"])
+    objective_variable = csv_handler.make_chosen_data_list(columns=["focus_score"])
+    print("説明変数リスト", explanatory_variable)
+    print("目的変数リスト", objective_variable)
