@@ -30,8 +30,10 @@ class BayesianOptimizer:
     
     
     def optimize(self, explanatory_variable, objective_variable):
+        # 目的変数を負の値に変換
+        negative_objective = [-v for v in objective_variable]
         # 最適化用データを追加
-        self.opt.tell(explanatory_variable, objective_variable)
+        self.opt.tell(explanatory_variable, negative_objective)
         # 最適化を実行
         work_time, break_time = self.opt.ask()
 
