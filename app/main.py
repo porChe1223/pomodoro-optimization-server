@@ -1,5 +1,6 @@
 from csv_handler.csv_handler import CSVHandler
 from optimize.optimize_round import optimize_round
+from optimize.bayesian_optimizer import BayesianOptimizer
 from fastapi import FastAPI
 
 
@@ -30,7 +31,9 @@ def round_optimizer(user_id: str, focus_score: float):
     print("説明変数リスト", explanatory_variable)
     print("目的変数リスト", objective_variable)
     # ラウンド最適化
-    work_time, break_time = optimize_round(explanatory_variable, objective_variable)
+    opt = BayesianOptimizer("round")
+    work_time, break_time = opt.optimize(explanatory_variable, objective_variable)
+    # work_time, break_time = optimize_round(explanatory_variable, objective_variable)
     print("提案された作業時間: ", work_time)
     print("提案された休憩時間: ", break_time)
     # CSVファイルの更新
