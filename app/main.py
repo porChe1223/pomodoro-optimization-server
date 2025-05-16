@@ -1,5 +1,5 @@
 from csv_handler.csv_handler import CSVHandler
-# from optimize.optimize_round import optimize_round
+from optimize.optimize_round import optimize_round
 from optimize.bayesian_optimizer import BayesianOptimizer
 from fastapi import FastAPI
 
